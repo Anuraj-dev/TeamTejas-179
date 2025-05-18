@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container">
     <!-- Logo/Brand -->
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="{{ url_for('main.index') }}">
       <!-- You can replace with an actual logo image -->
       <!-- <img src="{{ url_for('static', filename='images/logo.png') }}" alt="EcoFinds Logo" height="30"> -->
       EcoFinds
@@ -28,42 +28,42 @@
           <a
             class="nav-link {% if request.path == '/' %}active{% endif %}"
             aria-current="page"
-            href="/"
+            href="{{ url_for('main.index') }}"
             >Home</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link {% if '/products' in request.path %}active{% endif %}"
-            href="/products"
+            href="{{ url_for('products.index') }}"
             >Products</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link {% if '/categories' in request.path %}active{% endif %}"
-            href="/categories"
+            href="#"
             >Categories</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link {% if '/about' in request.path %}active{% endif %}"
-            href="/about"
+            href="#"
             >About</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link {% if '/contact' in request.path %}active{% endif %}"
-            href="/contact"
+            href="#"
             >Contact</a
           >
         </li>
       </ul>
 
       <!-- Search Form -->
-      <form class="d-flex me-auto mb-2 mb-lg-0" action="/search" method="GET">
+      <form class="d-flex me-auto mb-2 mb-lg-0" action="{{ url_for('products.search') }}" method="GET">
         <div class="input-group">
           <input
             class="form-control"
@@ -82,8 +82,7 @@
       <!-- Right Side Items: Auth & Cart -->
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <!-- Authentication Links -->
-        <!-- Backend developer: Use conditionals to show/hide based on user authentication status -->
-        {% if user_authenticated %}
+        {% if current_user.is_authenticated %}
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
@@ -92,33 +91,32 @@
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false">
-            <!-- Backend developer: Replace with actual username -->
-            {{ username }}
+            {{ current_user.username }}
           </a>
           <ul
             class="dropdown-menu dropdown-menu-end"
             aria-labelledby="userDropdown">
             <li>
-              <a class="dropdown-item" href="/user/profile">My Profile</a>
+              <a class="dropdown-item" href="{{ url_for('user.profile') }}">My Profile</a>
             </li>
-            <li><a class="dropdown-item" href="/user/orders">My Orders</a></li>
-            <li><a class="dropdown-item" href="/user/settings">Settings</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('purchase.history') }}">My Orders</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('products.my_listings') }}">My Listings</a></li>
             <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
           </ul>
         </li>
         {% else %}
         <li class="nav-item">
           <a
             class="nav-link {% if '/auth/login' in request.path %}active{% endif %}"
-            href="/auth/login"
+            href="{{ url_for('auth.login') }}"
             >Login</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link {% if '/auth/register' in request.path %}active{% endif %}"
-            href="/auth/register"
+            href="{{ url_for('auth.register') }}"
             >Register</a
           >
         </li>
@@ -126,7 +124,7 @@
 
         <!-- Shopping Cart -->
         <li class="nav-item">
-          <a class="nav-link position-relative" href="/cart">
+          <a class="nav-link position-relative" href="{{ url_for('cart.view') }}">
             <i class="bi bi-cart3 fs-5"></i>
             <!-- If not using Bootstrap Icons, use text instead -->
             <span class="d-none d-lg-inline-block ms-1">Cart</span>

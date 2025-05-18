@@ -1,0 +1,152 @@
+{% extends "layouts/base.html" %}
+{% block title %}Checkout | EcoFinds{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Order Summary -->
+        <div class="col-lg-4 order-lg-2 mb-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.cart and current_user.cart.items %}
+                        {% set cart_total = 0 %}
+                        {% set items_count = current_user.cart.items.count() %}
+                        
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-3">Items ({{ items_count }})</h6>
+                            {% for item in current_user.cart.items %}
+                                {% if item.product is defined and item.product %}
+                                    {% set item_total = item.product.price * item.quantity %}
+                                    {% set cart_total = cart_total + item_total %}
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <div>
+                                            <span>{{ item.product.title|truncate(25) }}</span>
+                                            <small class="text-muted d-block">Qty: {{ item.quantity }}</small>
+                                        </div>
+                                        <span>${{ "%.2f"|format(item_total) }}</span>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal</span>
+                            <span>${{ "%.2f"|format(cart_total) }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping</span>
+                            <span>Free</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-0 fw-bold">
+                            <span>Total</span>
+                            <span>${{ "%.2f"|format(cart_total) }}</span>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning mb-0">
+                            <p class="mb-0">Your cart is empty. Please add items to your cart to proceed with checkout.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Checkout Form -->
+        <div class="col-lg-8 order-lg-1">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Shipping Information</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.cart and current_user.cart.items and current_user.cart.items.count() > 0 %}
+                        <form action="{{ url_for('cart.checkout') }}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="first_name" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="last_name" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address" name="address" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="address2" class="form-label">Address 2 (Optional)</label>
+                                <input type="text" class="form-control" id="address2" name="address2">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-5 mb-3">
+                                    <label for="city" class="form-label">City</label>
+                                    <input type="text" class="form-control" id="city" name="city" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="state" class="form-label">State</label>
+                                    <input type="text" class="form-control" id="state" name="state" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="zip" class="form-label">Zip</label>
+                                    <input type="text" class="form-control" id="zip" name="zip" required>
+                                </div>
+                            </div>
+                            
+                            <hr class="my-4">
+                            
+                            <h5 class="mb-3">Payment Information</h5>
+                            
+                            <div class="mb-3">
+                                <label for="card_name" class="form-label">Name on Card</label>
+                                <input type="text" class="form-control" id="card_name" name="card_name" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="card_number" class="form-label">Card Number</label>
+                                <input type="text" class="form-control" id="card_number" name="card_number" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="expiry" class="form-label">Expiry Date (MM/YY)</label>
+                                    <input type="text" class="form-control" id="expiry" name="expiry" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" name="cvv" required>
+                                </div>
+                            </div>
+                            
+                            <hr class="my-4">
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Place Order</button>
+                                <a href="{{ url_for('cart.view') }}" class="btn btn-outline-secondary">Back to Cart</a>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-cart-x display-3 text-muted"></i>
+                            <h5 class="mt-3">Your cart is empty</h5>
+                            <p class="text-muted">Add products to your cart before proceeding to checkout.</p>
+                            <a href="{{ url_for('products.index') }}" class="btn btn-primary mt-2">
+                                <i class="bi bi-shop me-2"></i> Browse Products
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

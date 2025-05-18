@@ -102,7 +102,7 @@
     <div class="row align-items-center">
       <div class="col-md-6 text-center text-md-start">
         <!-- Backend developer: Make year dynamic -->
-        <p class="mb-0">&copy; {% now 'Y' %} EcoFinds. All rights reserved.</p>
+        <p class="mb-0">&copy; {{ now.strftime('%Y') }} EcoFinds. All rights reserved.</p>
       </div>
       <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
         <a href="/privacy" class="text-light me-3">Privacy</a>

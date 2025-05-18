@@ -1,5 +1,7 @@
 import os
 from flask import Flask
+from datetime import datetime
+from flask_login import current_user
 
 from app.extensions import init_extensions
 from app.config.config import config
@@ -46,6 +48,19 @@ def create_app(config_name=None):
     # Register CLI commands
     from app.cli import register_commands
     register_commands(app)
+    
+    # Inject datetime utility into templates
+    @app.context_processor
+    def inject_now():
+        return {'now': datetime.now()}
+    
+    @app.context_processor
+    def utility_processor():
+        cart_count = 0
+        if current_user.is_authenticated and current_user.cart:
+            cart_count = current_user.cart.items.count() if hasattr(current_user.cart, 'items') else 0
+            
+        return {'cart_item_count': cart_count}
     
     app.logger.info('Application initialized with configuration: %s', config_name)
     

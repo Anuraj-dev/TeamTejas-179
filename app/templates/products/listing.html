@@ -1,0 +1,154 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    {% if category is defined and category %}
+        {{ category.name }} - Products
+    {% elif search_query is defined and search_query %}
+        Search: {{ search_query }}
+    {% else %}
+        All Products
+    {% endif %} | EcoFinds
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-0">
+                {% if category is defined and category %}
+                    {{ category.name }}
+                {% elif search_query is defined and search_query %}
+                    Search: {{ search_query }}
+                {% else %}
+                    All Products
+                {% endif %}
+            </h1>
+            {% if search_query is defined and search_query %}
+                <div class="mt-2">
+                    <span class="text-muted">{{ pagination.total if pagination is defined else 0 }} results found</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Category Pills -->
+    {% if categories is defined and categories %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('products.index') }}" class="btn {% if not category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    All
+                </a>
+                {% for cat in categories %}
+                <a href="{{ url_for('products.index', category=cat.id) }}" 
+                   class="btn {% if category is defined and category and category.id == cat.id %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    {{ cat.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Products Grid -->
+    <div class="row g-4">
+        {% if products is defined and products %}
+            {% for product in products %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card h-100 product-card">
+                    <a href="{{ url_for('products.view', product_id=product.id) }}" class="text-decoration-none">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.title }}">
+                        {% else %}
+                        <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-image fs-1"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title text-dark">{{ product.title }}</h5>
+                            <p class="card-text text-muted mb-1">{{ product.description|default('')|truncate(50) }}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="fw-bold">${{ "%.2f"|format(product.price) }}</span>
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="bi bi-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center py-5">
+                <i class="bi bi-search display-4 mb-3"></i>
+                <h3>No products found</h3>
+                <p class="mb-0">
+                    {% if category is defined and category %}
+                        There are no products in this category yet.
+                    {% elif search_query is defined and search_query %}
+                        No products match your search criteria.
+                    {% else %}
+                        No products are available at the moment.
+                    {% endif %}
+                </p>
+                {% if category is defined and category or search_query is defined and search_query %}
+                <div class="mt-3">
+                    <a href="{{ url_for('products.index') }}" class="btn btn-primary">View All Products</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination is defined and pagination.pages > 1 %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for(request.endpoint, page=pagination.prev_num, **request.args) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                    {% endif %}
+                    
+                    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for(request.endpoint, page=page_num, **request.args) }}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">…</span>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if pagination.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for(request.endpoint, page=pagination.next_num, **request.args) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
