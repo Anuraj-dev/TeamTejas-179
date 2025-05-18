@@ -40,6 +40,25 @@ class User(BaseModel):
     def check_password(self, password):
         """Check if provided password matches stored hash."""
         return bcrypt.check_password_hash(self.password_hash, password)
+        
+    @property
+    def is_active(self):
+        """Return True if user is active."""
+        return True
+        
+    @property
+    def is_authenticated(self):
+        """Return True if user is authenticated."""
+        return True
+        
+    @property
+    def is_anonymous(self):
+        """Return False as registered users are not anonymous."""
+        return False
+        
+    def get_id(self):
+        """Return the user ID as a unicode string."""
+        return str(self.id)
 
     def __repr__(self):
         return f'<User {self.username}>'

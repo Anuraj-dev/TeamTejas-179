@@ -1,0 +1,88 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}About Us - EcoFinds{% endblock %}
+
+{% block meta_description %}Learn about EcoFinds' mission to promote sustainable shopping and our commitment to eco-friendly practices.{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <h1 class="mb-4">About EcoFinds</h1>
+      
+      <div class="mb-5">
+        <h2 class="h4">Our Mission</h2>
+        <p>
+          At EcoFinds, we believe that small choices can make a big impact. Our mission is to create a marketplace where buyers and sellers can connect to give products a second life, reduce waste, and promote sustainable consumption.
+        </p>
+        <p>
+          We're committed to making eco-friendly choices accessible to everyone by providing a platform that showcases sustainable alternatives to everyday products.
+        </p>
+      </div>
+      
+      <div class="mb-5">
+        <h2 class="h4">Our Story</h2>
+        <p>
+          EcoFinds started in 2023 with a simple idea: create a dedicated marketplace for sustainable products that makes it easy for consumers to make environmentally conscious choices.
+        </p>
+        <p>
+          Our founder noticed how difficult it was to find truly sustainable products among the sea of greenwashed items on traditional marketplaces. EcoFinds was born from the need for transparency and authenticity in the eco-friendly product space.
+        </p>
+      </div>
+      
+      <div class="mb-5">
+        <h2 class="h4">Our Values</h2>
+        <div class="row g-4 mt-3">
+          <div class="col-md-6">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-check-circle-fill text-primary fs-4 me-3 mt-1"></i>
+              <div>
+                <h3 class="h5">Sustainability</h3>
+                <p>We promote products that minimize environmental impact and support circular economy principles.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-check-circle-fill text-primary fs-4 me-3 mt-1"></i>
+              <div>
+                <h3 class="h5">Transparency</h3>
+                <p>We believe in honest descriptions and clear information about the products on our platform.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-check-circle-fill text-primary fs-4 me-3 mt-1"></i>
+              <div>
+                <h3 class="h5">Community</h3>
+                <p>We foster connections between conscious consumers and ethical sellers.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-check-circle-fill text-primary fs-4 me-3 mt-1"></i>
+              <div>
+                <h3 class="h5">Accessibility</h3>
+                <p>We make sustainable choices available to everyone, regardless of budget.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-5">
+        <h2 class="h4">Join Us</h2>
+        <p>
+          Whether you're a buyer looking for sustainable alternatives or a seller with eco-friendly products, we invite you to join our growing community and be part of the solution.
+        </p>
+        <div class="mt-4">
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary me-3">Create an Account</a>
+          <a href="{{ url_for('main.contact') }}" class="btn btn-outline-primary">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 
