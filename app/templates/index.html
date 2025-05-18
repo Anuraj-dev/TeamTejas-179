@@ -1,0 +1,273 @@
+{% extends "layouts/base.html" %} {% block title %}EcoFinds - Sustainable
+Products Marketplace{% endblock %} {% block meta_description %}EcoFinds is your
+marketplace for eco-friendly and sustainable products. Discover items that are
+good for you and the planet.{% endblock %} {% block content %}
+<section class="hero-section py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-3">Sustainable Shopping Made Simple</h1>
+        <p class="lead mb-4">
+          Discover eco-friendly products that are good for you and the planet.
+          Join our community of conscious consumers making a difference.
+        </p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          <a href="/products" class="btn btn-primary btn-lg px-4 me-md-2"
+            >Shop Now</a
+          >
+          <a href="/about" class="btn btn-outline-secondary btn-lg px-4"
+            >Learn More</a
+          >
+        </div>
+      </div>
+      <div class="col-lg-6 mt-5 mt-lg-0">
+        <!-- Backend developer: Replace with dynamic image -->
+        <img
+          src="{{ url_for('static', filename='images/hero-image.jpg') }}"
+          alt="Eco-friendly products"
+          class="img-fluid rounded shadow" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="featured-categories py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5">Shop by Category</h2>
+    <div class="row g-4">
+      <!-- Backend developer: Replace with dynamic categories from database -->
+      {% for category in categories %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="{{ category.url }}" class="text-decoration-none">
+          <div class="card h-100 border-0 shadow-sm">
+            <img
+              src="{{ category.image }}"
+              class="card-img-top"
+              alt="{{ category.name }}" />
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ category.name }}</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% else %}
+      <!-- Fallback static categories if no dynamic data -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="/products/category/home" class="text-decoration-none">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+              <i class="bi bi-house-door fs-1 text-primary mb-3"></i>
+              <h5 class="card-title">Home & Living</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="/products/category/beauty" class="text-decoration-none">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+              <i class="bi bi-droplet fs-1 text-primary mb-3"></i>
+              <h5 class="card-title">Beauty & Personal Care</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="/products/category/fashion" class="text-decoration-none">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+              <i class="bi bi-bag fs-1 text-primary mb-3"></i>
+              <h5 class="card-title">Sustainable Fashion</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="/products/category/food" class="text-decoration-none">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+              <i class="bi bi-cup-hot fs-1 text-primary mb-3"></i>
+              <h5 class="card-title">Food & Beverages</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="featured-products py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Featured Products</h2>
+      <a href="/products" class="btn btn-outline-primary">View All</a>
+    </div>
+
+    <div class="row g-4">
+      <!-- Backend developer: Replace with dynamic products from database -->
+      {% for product in featured_products %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card h-100 product-card">
+          <img
+            src="{{ product.image }}"
+            class="card-img-top"
+            alt="{{ product.name }}" />
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text text-muted">{{ product.short_description }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold">${{ product.price }}</span>
+              <a
+                href="/cart/add/{{ product.id }}"
+                class="btn btn-sm btn-primary"
+                >Add to Cart</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <!-- Fallback static products if no dynamic data -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="card h-100 product-card">
+          <div class="card-body text-center py-5">
+            <i class="bi bi-bag-heart fs-1 text-muted mb-3"></i>
+            <h5 class="card-title">Eco-Friendly Products</h5>
+            <p class="card-text">Coming soon!</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="testimonials py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5">What Our Customers Say</h2>
+
+    <div class="row g-4">
+      <!-- Backend developer: Replace with dynamic testimonials from database -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex mb-3">
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+            </div>
+            <p class="card-text">
+              "I love that I can shop guilt-free knowing all products are
+              sustainable and eco-friendly. The quality is amazing!"
+            </p>
+            <div class="d-flex align-items-center mt-3">
+              <div
+                class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px">
+                JS
+              </div>
+              <div class="ms-3">
+                <h6 class="mb-0">Jane Smith</h6>
+                <small class="text-muted">Verified Customer</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex mb-3">
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-half text-warning"></i>
+            </div>
+            <p class="card-text">
+              "EcoFinds has transformed how I shop. Their customer service is
+              exceptional and delivery is always prompt."
+            </p>
+            <div class="d-flex align-items-center mt-3">
+              <div
+                class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px">
+                MJ
+              </div>
+              <div class="ms-3">
+                <h6 class="mb-0">Michael Johnson</h6>
+                <small class="text-muted">Verified Customer</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex mb-3">
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+            </div>
+            <p class="card-text">
+              "As someone who cares deeply about the environment, finding
+              EcoFinds has been a game-changer for my household."
+            </p>
+            <div class="d-flex align-items-center mt-3">
+              <div
+                class="rounded-circle bg-accent text-white d-flex align-items-center justify-content-center"
+                style="width: 40px; height: 40px">
+                AT
+              </div>
+              <div class="ms-3">
+                <h6 class="mb-0">Aisha Thomas</h6>
+                <small class="text-muted">Verified Customer</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h2 class="mb-3">Join Our Community</h2>
+        <p class="lead mb-4">
+          Be the first to know about new products, exclusive offers, and
+          sustainability tips.
+        </p>
+        <form
+          class="row g-3 justify-content-center"
+          action="/newsletter/subscribe"
+          method="POST">
+          <!-- Backend developer: Add CSRF protection if needed -->
+          <div class="col-md-8">
+            <input
+              type="email"
+              class="form-control form-control-lg"
+              placeholder="Your email address"
+              required />
+          </div>
+          <div class="col-md-4">
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+              Subscribe
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
