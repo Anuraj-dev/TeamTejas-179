@@ -1,1 +1,70 @@
+# Environment variables
 .env
+.env.*
+!.env.example
+
+# Project specific
+project-rules.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+
+# SQLAlchemy
+*.sqlite
+*.db
+
+# Alembic
+migrations/versions/*
+!migrations/versions/.gitkeep
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Uploaded files
+app/static/images/uploads/*
+!app/static/images/uploads/.gitkeep
+
+# Logs
+logs/
+*.log
