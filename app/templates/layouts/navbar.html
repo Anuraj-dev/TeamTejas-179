@@ -1,0 +1,147 @@
+<!-- Navbar Component -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <!-- Logo/Brand -->
+    <a class="navbar-brand" href="/">
+      <!-- You can replace with an actual logo image -->
+      <!-- <img src="{{ url_for('static', filename='images/logo.png') }}" alt="EcoFinds Logo" height="30"> -->
+      EcoFinds
+    </a>
+
+    <!-- Mobile Toggle Button -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarContent"
+      aria-controls="navbarContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Content - Collapsible -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Main Navigation Links -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link {% if request.path == '/' %}active{% endif %}"
+            aria-current="page"
+            href="/"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if '/products' in request.path %}active{% endif %}"
+            href="/products"
+            >Products</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if '/categories' in request.path %}active{% endif %}"
+            href="/categories"
+            >Categories</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if '/about' in request.path %}active{% endif %}"
+            href="/about"
+            >About</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if '/contact' in request.path %}active{% endif %}"
+            href="/contact"
+            >Contact</a
+          >
+        </li>
+      </ul>
+
+      <!-- Search Form -->
+      <form class="d-flex me-auto mb-2 mb-lg-0" action="/search" method="GET">
+        <div class="input-group">
+          <input
+            class="form-control"
+            type="search"
+            name="q"
+            placeholder="Search products..."
+            aria-label="Search" />
+          <button class="btn btn-outline-primary" type="submit">
+            <i class="bi bi-search"></i>
+            <!-- If not using Bootstrap Icons, use text instead -->
+            <span class="d-none">Search</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Right Side Items: Auth & Cart -->
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!-- Authentication Links -->
+        <!-- Backend developer: Use conditionals to show/hide based on user authentication status -->
+        {% if user_authenticated %}
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <!-- Backend developer: Replace with actual username -->
+            {{ username }}
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="userDropdown">
+            <li>
+              <a class="dropdown-item" href="/user/profile">My Profile</a>
+            </li>
+            <li><a class="dropdown-item" href="/user/orders">My Orders</a></li>
+            <li><a class="dropdown-item" href="/user/settings">Settings</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="/auth/logout">Logout</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a
+            class="nav-link {% if '/auth/login' in request.path %}active{% endif %}"
+            href="/auth/login"
+            >Login</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link {% if '/auth/register' in request.path %}active{% endif %}"
+            href="/auth/register"
+            >Register</a
+          >
+        </li>
+        {% endif %}
+
+        <!-- Shopping Cart -->
+        <li class="nav-item">
+          <a class="nav-link position-relative" href="/cart">
+            <i class="bi bi-cart3 fs-5"></i>
+            <!-- If not using Bootstrap Icons, use text instead -->
+            <span class="d-none d-lg-inline-block ms-1">Cart</span>
+            <!-- Backend developer: Replace with actual cart item count -->
+            {% if cart_item_count > 0 %}
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ cart_item_count }}
+              <span class="visually-hidden">items in cart</span>
+            </span>
+            {% endif %}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- End Navbar Component -->

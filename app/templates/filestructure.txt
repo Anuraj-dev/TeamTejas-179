@@ -1,0 +1,33 @@
+app/
+├── static/
+│   ├── css/
+│   │   ├── main.css (custom styles)
+│   │   └── bootstrap-custom.css (bootstrap overrides)
+│   ├── js/
+│   │   ├── main.js (custom scripts)
+│   │   └── cart.js (cart functionality)
+│   └── images/
+│       └── (product images, logos, etc.)
+└── templates/
+    ├── layouts/
+    │   ├── base.html (main template with common structure)
+    │   └── auth_layout.html (for login/register pages)
+    ├── components/
+    │   ├── navbar.html
+    │   ├── footer.html
+    │   ├── product_card.html
+    │   └── cart_item.html
+    ├── index.html (homepage)
+    ├── products/
+    │   ├── list.html (product listing)
+    │   └── detail.html (single product view)
+    ├── cart/
+    │   ├── cart.html (shopping cart)
+    │   └── checkout.html (checkout process)
+    ├── auth/
+    │   ├── login.html
+    │   └── register.html
+    ├── user/
+    │   └── profile.html
+    └── purchases/
+        └── history.html
