@@ -1,0 +1,100 @@
+{% extends "layouts/base.html" %}
+{% block title %}Your Cart | EcoFinds{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="mb-0">Your Shopping Cart</h4>
+        </div>
+        <div class="card-body">
+            {% if current_user.cart and current_user.cart.items and current_user.cart.items.count() > 0 %}
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set cart_total = 0 %}
+                        {% if current_user.cart.items %}
+                            {% for item in current_user.cart.items %}
+                                {% if item.product is defined and item.product %}
+                                    {% set item_total = item.product.price * item.quantity %}
+                                    {% set cart_total = cart_total + item_total %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if item.product.image_url %}
+                                                    <img src="{{ item.product.image_url }}" alt="{{ item.product.title }}" class="rounded me-3" width="60">
+                                                {% else %}
+                                                    <div class="bg-secondary text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px">
+                                                        <i class="bi bi-image"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <h6 class="mb-0">{{ item.product.title }}</h6>
+                                                    <small class="text-muted">{{ item.product.category.name if item.product.category is defined else "" }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>${{ "%.2f"|format(item.product.price) }}</td>
+                                        <td>
+                                            <form action="{{ url_for('cart.update', product_id=item.product.id) }}" method="post" class="d-flex align-items-center">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm" style="width: 70px;">
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary ms-2">
+                                                    <i class="bi bi-arrow-clockwise"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td>${{ "%.2f"|format(item_total) }}</td>
+                                        <td>
+                                            <form action="{{ url_for('cart.remove_from_cart', product_id=item.product.id) }}" method="post">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-bold">
+                            <td colspan="3" class="text-end">Total:</td>
+                            <td>${{ "%.2f"|format(cart_total) }}</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ url_for('products.index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i> Continue Shopping
+                </a>
+                <a href="{{ url_for('cart.checkout') }}" class="btn btn-primary">
+                    Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-cart-x display-1 text-muted"></i>
+                <h4 class="mt-3">Your cart is empty</h4>
+                <p class="text-muted">Start adding products to your cart to see them here!</p>
+                <a href="{{ url_for('products.index') }}" class="btn btn-primary mt-2">
+                    <i class="bi bi-shop me-2"></i> Browse Products
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

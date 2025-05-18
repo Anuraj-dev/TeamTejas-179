@@ -1,0 +1,131 @@
+{% extends "layouts/base.html" %}
+{% block title %}Purchase Details | EcoFinds{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('purchase.history') }}">Purchase History</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order #{{ purchase.id if purchase is defined else 'Not Found' }}</li>
+        </ol>
+    </nav>
+
+    {% if purchase is defined %}
+        <div class="card mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Order #{{ purchase.id }}</h4>
+                <span class="badge bg-success">Completed</span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Order Information</h5>
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Order Date</th>
+                                    <td>{{ purchase.created_at.strftime('%B %d, %Y at %H:%M') if purchase.created_at else "N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Order Status</th>
+                                    <td>
+                                        <span class="badge bg-success">Completed</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Total Amount</th>
+                                    <td>${{ "%.2f"|format(purchase.total_amount) if purchase.total_amount is defined else "0.00" }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Shipping Information</h5>
+                        <address>
+                            {% if purchase.shipping_address is defined and purchase.shipping_address %}
+                                {{ purchase.shipping_address.first_name }} {{ purchase.shipping_address.last_name }}<br>
+                                {{ purchase.shipping_address.address }}<br>
+                                {% if purchase.shipping_address.address2 %}
+                                    {{ purchase.shipping_address.address2 }}<br>
+                                {% endif %}
+                                {{ purchase.shipping_address.city }}, {{ purchase.shipping_address.state }} {{ purchase.shipping_address.zip }}<br>
+                            {% else %}
+                                <span class="text-muted">Address information not available</span>
+                            {% endif %}
+                        </address>
+                    </div>
+                </div>
+
+                <h5>Order Items</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if purchase.items is defined and purchase.items %}
+                                {% for item in purchase.items %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if item.product is defined and item.product and item.product.image_url %}
+                                                    <img src="{{ item.product.image_url }}" alt="{{ item.product_title if item.product_title is defined else 'Product' }}" class="rounded me-3" width="60">
+                                                {% else %}
+                                                    <div class="bg-secondary text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px">
+                                                        <i class="bi bi-image"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <h6 class="mb-0">{{ item.product_title if item.product_title is defined else 'Product' }}</h6>
+                                                    {% if item.product is defined and item.product and item.product.seller is defined and item.product.seller %}
+                                                        <small class="text-muted">Seller: {{ item.product.seller.username }}</small>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>${{ "%.2f"|format(item.price_at_purchase) if item.price_at_purchase is defined else "%.2f"|format(item.price) if item.price is defined else "0.00" }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>${{ "%.2f"|format(item.price_at_purchase * item.quantity) if item.price_at_purchase is defined and item.quantity is defined else 
+                                                 "%.2f"|format(item.price * item.quantity) if item.price is defined and item.quantity is defined else "0.00" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">No items in this order</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="fw-bold">
+                                <td colspan="3" class="text-end">Total:</td>
+                                <td>${{ "%.2f"|format(purchase.total_amount) if purchase.total_amount is defined else "0.00" }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('purchase.history') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i> Back to Purchase History
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            <h4 class="alert-heading">Order Not Found</h4>
+            <p>Sorry, the requested order could not be found. It may have been deleted or you might not have permission to view it.</p>
+            <hr>
+            <p class="mb-0">
+                <a href="{{ url_for('purchase.history') }}" class="alert-link">View your purchase history</a>
+            </p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

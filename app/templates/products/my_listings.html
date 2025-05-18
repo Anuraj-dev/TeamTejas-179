@@ -1,0 +1,112 @@
+{% extends "layouts/base.html" %}
+{% block title %}My Listings | EcoFinds{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">My Listings</h1>
+        <a href="{{ url_for('products.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i> Create New Listing
+        </a>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            {% if current_user.listings and current_user.listings.count() > 0 %}
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in current_user.listings %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if product.image_url %}
+                                        <img src="{{ product.image_url }}" alt="{{ product.title }}" class="rounded me-3" width="60">
+                                    {% else %}
+                                        <div class="bg-secondary text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px">
+                                            <i class="bi bi-image"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ product.title }}</h6>
+                                        <small class="text-muted">{{ product.description|default('')|truncate(50) }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${{ "%.2f"|format(product.price) }}</td>
+                            <td>{% if product.category is defined and product.category %}{{ product.category.name }}{% endif %}</td>
+                            <td>
+                                {% if product.is_active is defined and product.is_sold is defined %}
+                                    {% if product.is_active and not product.is_sold %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% elif product.is_sold %}
+                                        <span class="badge bg-danger">Sold</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            <td>{{ product.created_at.strftime('%b %d, %Y') if product.created_at else "N/A" }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('products.view', product_id=product.id) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('products.edit', product_id=product.id) }}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ product.id }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Delete Confirmation Modal -->
+                                <div class="modal fade" id="deleteModal{{ product.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ product.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ product.id }}">Confirm Delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete "{{ product.title }}"? This action cannot be undone.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <form action="{{ url_for('products.delete', product_id=product.id) }}" method="post">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-box-seam display-1 text-muted"></i>
+                <h4 class="mt-3">No listings yet</h4>
+                <p class="text-muted">Start selling by creating your first product listing!</p>
+                <a href="{{ url_for('products.create') }}" class="btn btn-primary mt-2">
+                    <i class="bi bi-plus-circle me-2"></i> Create New Listing
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

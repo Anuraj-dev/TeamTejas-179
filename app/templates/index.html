@@ -2,30 +2,27 @@
 Products Marketplace{% endblock %} {% block meta_description %}EcoFinds is your
 marketplace for eco-friendly and sustainable products. Discover items that are
 good for you and the planet.{% endblock %} {% block content %}
-<section class="hero-section py-5">
+<section class="hero mb-5">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-lg-6">
-        <h1 class="display-4 fw-bold mb-3">Sustainable Shopping Made Simple</h1>
-        <p class="lead mb-4">
+      <div class="col-lg-6 hero-content">
+        <h1>Sustainable Shopping Made Simple</h1>
+        <p>
           Discover eco-friendly products that are good for you and the planet.
           Join our community of conscious consumers making a difference.
         </p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-          <a href="/products" class="btn btn-primary btn-lg px-4 me-md-2"
-            >Shop Now</a
-          >
-          <a href="/about" class="btn btn-outline-secondary btn-lg px-4"
-            >Learn More</a
-          >
+        <div class="d-flex gap-3">
+          <a href="{{ url_for('products.index') }}" class="btn btn-light btn-lg">Shop Now</a>
+          <a href="#" class="btn btn-outline-light btn-lg">Learn More</a>
         </div>
       </div>
-      <div class="col-lg-6 mt-5 mt-lg-0">
+      <div class="col-lg-6 mt-5 mt-lg-0 d-none d-lg-block">
         <!-- Backend developer: Replace with dynamic image -->
         <img
           src="{{ url_for('static', filename='images/hero-image.jpg') }}"
           alt="Eco-friendly products"
-          class="img-fluid rounded shadow" />
+          class="img-fluid rounded shadow" 
+          onerror="this.src='https://via.placeholder.com/600x400/027361/ffffff?text=EcoFinds';this.onerror='';" />
       </div>
     </div>
   </div>

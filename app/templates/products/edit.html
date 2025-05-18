@@ -1,0 +1,158 @@
+{% extends "layouts/base.html" %}
+{% block title %}Edit Listing | EcoFinds{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Edit Listing</h4>
+                </div>
+                <div class="card-body">
+                    {% if current_user.is_authenticated %}
+                        {% if product is defined and form is defined %}
+                        <form method="post" enctype="multipart/form-data">
+                            {{ form.csrf_token }}
+                            
+                            <!-- Product Title -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Product Title<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="title" name="title" 
+                                       value="{{ form.title.data or product.title }}" required>
+                                {% if form.title.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.title.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Category -->
+                            <div class="mb-3">
+                                <label for="category_id" class="form-label">Category<span class="text-danger">*</span></label>
+                                <select class="form-select" id="category_id" name="category_id" required>
+                                    <option value="">Select a category</option>
+                                    {% if categories is defined %}
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}" 
+                                                {% if form.category_id.data == category.id or product.category_id == category.id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                                {% if form.category_id.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.category_id.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Price -->
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price ($)<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="price" name="price" 
+                                       value="{{ form.price.data or product.price }}" step="0.01" min="0.01" required>
+                                {% if form.price.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.price.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description<span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="description" name="description" 
+                                         rows="5" required>{{ form.description.data or product.description }}</textarea>
+                                {% if form.description.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.description.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Product Image -->
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Product Image</label>
+                                {% if product.image_url %}
+                                    <div class="mb-2">
+                                        <img src="{{ product.image_url }}" alt="{{ product.title }}" class="img-thumbnail" style="max-height: 200px">
+                                        <div class="form-check mt-2">
+                                            <input class="form-check-input" type="checkbox" id="delete_image" name="delete_image">
+                                            <label class="form-check-label text-danger" for="delete_image">
+                                                Delete current image
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <input type="file" class="form-control" id="image" name="image">
+                                <small class="text-muted">Supported formats: JPG, JPEG, PNG, GIF (max 5MB)</small>
+                                {% if form.image.errors %}
+                                    <div class="text-danger small">
+                                        {% for error in form.image.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="mb-3">
+                                <label class="form-label">Listing Status</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
+                                           {% if product.is_active %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_active">
+                                        Active (visible to buyers)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_sold" name="is_sold" 
+                                           {% if product.is_sold %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_sold">
+                                        Mark as sold
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{ url_for('products.view', product_id=product.id) }}" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                        {% else %}
+                        <div class="alert alert-warning">
+                            <h4 class="alert-heading">Product Not Found</h4>
+                            <p>The product you're trying to edit doesn't exist or you don't have permission to edit it.</p>
+                            <hr>
+                            <p class="mb-0">
+                                <a href="{{ url_for('products.index') }}" class="alert-link">Browse all products</a> or 
+                                <a href="{{ url_for('products.my_listings') }}" class="alert-link">view your listings</a>.
+                            </p>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                    <div class="alert alert-info">
+                        <h4 class="alert-heading">Authentication Required</h4>
+                        <p>Please log in to edit a product listing.</p>
+                        <hr>
+                        <p class="mb-0">
+                            <a href="{{ url_for('auth.login') }}" class="alert-link">Log in</a> or 
+                            <a href="{{ url_for('auth.register') }}" class="alert-link">create an account</a> to continue.
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
