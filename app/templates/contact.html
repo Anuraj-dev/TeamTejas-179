@@ -1,0 +1,80 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Contact Us - EcoFinds{% endblock %}
+
+{% block meta_description %}Have questions or feedback? Contact the EcoFinds team for customer support or business inquiries.{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-md-6">
+      <h1 class="mb-4">Contact Us</h1>
+      <p class="mb-4">Have questions, suggestions, or need assistance? We're here to help! Fill out the form and we'll get back to you as soon as possible.</p>
+
+      <form action="#" method="post" class="mb-5">
+        <div class="mb-3">
+          <label for="name" class="form-label">Your Name</label>
+          <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        
+        <div class="mb-3">
+          <label for="subject" class="form-label">Subject</label>
+          <select class="form-select" id="subject" name="subject" required>
+            <option value="" selected disabled>Select a topic</option>
+            <option value="customer_support">Customer Support</option>
+            <option value="product_inquiry">Product Inquiry</option>
+            <option value="selling">Selling on EcoFinds</option>
+            <option value="partnership">Partnership Opportunities</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div class="mb-3">
+          <label for="message" class="form-label">Your Message</label>
+          <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+    </div>
+    
+    <div class="col-md-5 offset-md-1">
+      <div class="bg-light p-4 rounded shadow-sm mb-4">
+        <h2 class="h4 mb-3">Company Information</h2>
+        <ul class="list-unstyled">
+          <li class="mb-3">
+            <i class="bi bi-geo-alt me-2 text-primary"></i>
+            123 Eco Street, Green City, Earth
+          </li>
+          <li class="mb-3">
+            <i class="bi bi-envelope me-2 text-primary"></i>
+            <a href="mailto:contact@ecofinds.com" class="text-decoration-none">contact@ecofinds.com</a>
+          </li>
+          <li class="mb-3">
+            <i class="bi bi-telephone me-2 text-primary"></i>
+            <a href="tel:+15551234567" class="text-decoration-none">+1 (555) 123-4567</a>
+          </li>
+        </ul>
+        
+        <h3 class="h5 mt-4 mb-3">Business Hours</h3>
+        <p class="mb-1">Monday - Friday: 9 AM - 6 PM</p>
+        <p>Saturday: 10 AM - 4 PM</p>
+        <p class="text-muted">Closed on Sundays and holidays</p>
+        
+        <h3 class="h5 mt-4 mb-3">Follow Us</h3>
+        <div class="d-flex gap-3">
+          <a href="#" class="text-dark fs-4"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-dark fs-4"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-dark fs-4"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-dark fs-4"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 
